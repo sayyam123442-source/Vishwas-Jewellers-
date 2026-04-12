@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<meta name="theme-color" content="#1A0A2E"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Vishwas Gold"/>
+<link rel="manifest" href="manifest.webmanifest"/>
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' fill='%231A0A2E'/><text x='96' y='130' font-size='100' text-anchor='middle' fill='%23E8B84B'>✦</text></svg>"/>
+<title>Vishwas Jewellers — Gold Calculator</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  :root{
+    --gold:#E8B84B;--gold-light:#F5D07A;--gold-pale:#FDF0C0;--gold-dark:#C9922A;
+    --bg:#1A0A2E;--surface:#2D1B4E;--surface2:#3D2560;--surface3:#4D2F72;
+    --text:#F5D07A;--text-muted:#C9922A;--text-dim:#8B6015;
+    --green:#4CAF50;--red:#E53935;
+    --radius:14px;--radius-sm:8px;
+  }
+  html,body{height:100%;overflow-x:hidden;background:var(--bg)}
+  body{font-family:Arial,sans-serif;color:var(--text);min-height:100vh;padding-bottom:40px}
+
+  /* Header */
+  .header{
+    background:linear-gradient(135deg,#2D1B4E 0%,#3D2560 50%,#2D1B4E 100%);
+    border-bottom:1px solid var(--gold-dark);
+    padding:20px 20px 16px;
+    text-align:center;
+    position:relative;
+  }
+  .header-ornament{color:var(--gold);font-size:11px;letter-spacing:4px;text-transform:uppercase;margin-bottom:6px;font-family:Arial,sans-serif;font-weight:700}
+  .header-title{font-family:Arial,sans-serif;font-size:28px;font-weight:700;color:var(--gold-light);line-height:1.1;letter-spacing:1px}
+  .header-sub{font-size:12px;color:var(--text-muted);margin-top:4px;letter-spacing:2px;text-transform:uppercase}
+  .admin-btn{position:absolute;top:18px;right:16px;background:none;border:1px solid var(--gold-dark);border-radius:var(--radius-sm);padding:6px 10px;color:var(--text-muted);font-size:11px;cursor:pointer;font-family:Arial,sans-serif;transition:all 0.2s}
+  .admin-btn:active{background:var(--surface2);color:var(--gold)}
+
+  /* Rate bar */
+  .rate-bar{background:var(--surface2);border-bottom:1px solid var(--gold-dark);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .rate-item{text-align:center;flex:1}
+  .rate-label{font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:1.5px}
+  .rate-value{font-size:15px;font-weight:700;color:var(--gold-light);font-family:Arial,sans-serif;letter-spacing:0.5px}
+  .rate-divider{width:1px;height:30px;background:var(--surface3)}
+
+  /* Main content */
+  .main{padding:20px 16px 0}
+
+  /* Section */
+  .calc-section{
+    background:linear-gradient(180deg,var(--surface) 0%,#1A0A2E 100%);
+    border:1px solid var(--gold-dark);
+    border-radius:var(--radius);
+    margin-bottom:20px;
+    overflow:hidden;
+  }
+  .section-header{
+    background:linear-gradient(90deg,var(--surface2),var(--surface3));
+    padding:14px 18px;
+    border-bottom:1px solid var(--gold-dark);
+    display:flex;align-items:center;gap:10px
+  }
+  .karat-badge{
+    background:var(--gold);color:#1A0A2E;
+    font-size:13px;font-weight:700;
+    padding:4px 10px;border-radius:20px;
+    font-family:Arial,sans-serif;letter-spacing:1px
+  }
+  .section-title{font-size:15px;font-weight:600;color:var(--text);flex:1}
+  .section-rate{font-size:12px;color:var(--text-muted)}
+
+  /* Input area */
+  .input-area{padding:18px 18px 12px}
+  .input-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;display:block}
+  .weight-row{display:flex;align-items:center;gap:10px}
+  .weight-input{
+    flex:1;background:var(--surface2);border:1.5px solid var(--gold-dark);
+    border-radius:var(--radius-sm);padding:14px 16px;
+    font-size:24px;font-weight:700;color:var(--gold-light);
+    font-family:Arial,sans-serif;letter-spacing:1px;
+    outline:none;width:100%;text-align:center;
+    transition:border-color 0.2s;
+  }
+  .weight-input:focus{border-color:var(--gold)}
+  .weight-input::placeholder{color:var(--text-dim);font-size:18px}
+  .unit-label{color:var(--text-muted);font-size:14px;font-weight:600;min-width:24px}
+
+  /* Results */
+  .results{padding:0 18px 18px}
+  .result-row{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:9px 0;border-bottom:1px solid rgba(139,96,21,0.2)
+  }
+  .result-row:last-child{border-bottom:none}
+  .result-label{font-size:13px;color:var(--text-muted)}
+  .result-val{font-size:14px;font-weight:600;color:var(--text);font-family:Arial,sans-serif;font-size:16px}
+  .result-val.gold{color:var(--gold-light)}
+  .result-val.muted{color:var(--text-dim);font-size:14px}
+  .total-row{
+    background:linear-gradient(90deg,rgba(232,184,75,0.15),rgba(232,184,75,0.05));
+    border:1px solid rgba(232,184,75,0.4);
+    border-radius:var(--radius-sm);
+    padding:14px 16px;margin-top:10px;
+    display:flex;justify-content:space-between;align-items:center
+  }
+  .total-label{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--gold)}
+  .total-amount{font-size:26px;font-weight:700;color:var(--gold-light);font-family:Arial,sans-serif;letter-spacing:1px}
+
+  /* Empty state */
+  .empty-state{padding:20px;text-align:center;color:var(--text-dim);font-size:13px;font-style:italic}
+
+  /* Admin modal */
+  .modal-overlay{
+    display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);
+    z-index:100;align-items:center;justify-content:center;padding:20px
+  }
+  .modal-overlay.active{display:flex}
+  .modal{
+    background:var(--surface);border:1px solid var(--gold);
+    border-radius:var(--radius);padding:28px 24px;
+    width:100%;max-width:340px
+  }
+  .modal-title{font-family:Arial,sans-serif;font-size:22px;font-weight:700;color:var(--gold-light);margin-bottom:4px;text-align:center}
+  .modal-sub{font-size:12px;color:var(--text-muted);text-align:center;margin-bottom:22px}
+  .modal-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;display:block}
+  .modal-input{
+    width:100%;background:var(--surface2);border:1px solid var(--gold-dark);
+    border-radius:var(--radius-sm);padding:12px 14px;
+    font-size:18px;color:var(--text);font-family:Arial,sans-serif;
+    outline:none;margin-bottom:14px;text-align:center
+  }
+  .modal-input:focus{border-color:var(--gold)}
+  .modal-btn{
+    width:100%;padding:13px;border:none;border-radius:var(--radius-sm);
+    font-size:14px;font-weight:700;letter-spacing:1px;cursor:pointer;
+    font-family:Arial,sans-serif;margin-bottom:8px;
+  }
+  .modal-btn.primary{background:var(--gold);color:#1A0A2E}
+  .modal-btn.secondary{background:var(--surface2);color:var(--text-muted);border:1px solid var(--gold-dark)}
+  .modal-error{color:var(--red);font-size:12px;text-align:center;margin:-6px 0 10px;min-height:16px}
+
+  /* Numpad */
+  .numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0}
+  .np-btn{
+    background:var(--surface2);border:1px solid var(--surface3);
+    border-radius:var(--radius-sm);padding:14px 8px;
+    font-size:18px;font-weight:600;color:var(--text);
+    cursor:pointer;text-align:center;font-family:Arial,sans-serif;
+    transition:background 0.15s;
+  }
+  .np-btn:active{background:var(--surface3)}
+  .np-btn.gold{background:rgba(201,146,42,0.15);color:var(--gold)}
+  .np-btn.danger{background:rgba(229,57,53,0.1);color:var(--red)}
+
+  /* Footer */
+  .footer{text-align:center;padding:24px 20px 10px;color:var(--text-dim);font-size:11px;letter-spacing:1px}
+
+  /* Toast */
+  .toast{
+    position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(80px);
+    background:var(--gold);color:#1A0A2E;padding:10px 22px;
+    border-radius:30px;font-size:13px;font-weight:700;
+    transition:transform 0.3s ease;z-index:200;white-space:nowrap
+  }
+  .toast.show{transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-ornament">✦ Established with Trust ✦</div>
+  <div class="header-title">Vishwas Jewellers</div>
+  <div class="header-sub">Gold Rate Calculator</div>
+  <button class="admin-btn" onclick="openAdmin()">⚙ Rates</button>
+</div>
+
+<div class="rate-bar" id="ratebar">
+  <div class="rate-item">
+    <div class="rate-label">24kt Rate</div>
+    <div class="rate-value" id="rate24disp">—</div>
+  </div>
+  <div class="rate-divider"></div>
+  <div class="rate-item">
+    <div class="rate-label">22kt Rate</div>
+    <div class="rate-value" id="rate22disp">—</div>
+  </div>
+  <div class="rate-divider"></div>
+  <div class="rate-item">
+    <div class="rate-label">18kt Rate</div>
+    <div class="rate-value" id="rate18disp">—</div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- 22kt Calculator -->
+  <div class="calc-section">
+    <div class="section-header">
+      <span class="karat-badge">22kt</span>
+      <span class="section-title">Gold Calculator</span>
+      <span class="section-rate" id="hdr22"></span>
+    </div>
+    <div class="input-area">
+      <span class="input-label">Enter Gold Weight</span>
+      <div class="weight-row">
+        <input class="weight-input" id="w22" type="number" inputmode="decimal" placeholder="0.00" step="0.01" min="0" oninput="calc22()"/>
+        <span class="unit-label">g</span>
+      </div>
+    </div>
+    <div class="results" id="res22">
+      <div class="empty-state">Enter weight above to calculate</div>
+    </div>
+  </div>
+
+  <!-- 18kt Calculator -->
+  <div class="calc-section">
+    <div class="section-header">
+      <span class="karat-badge" style="background:linear-gradient(135deg,#C9922A,#8B6015);color:#1A0A2E">18kt</span>
+      <span class="section-title">Gold Calculator</span>
+      <span class="section-rate" id="hdr18"></span>
+    </div>
+    <div class="input-area">
+      <span class="input-label">Enter Gold Weight</span>
+      <div class="weight-row">
+        <input class="weight-input" id="w18" type="number" inputmode="decimal" placeholder="0.00" step="0.01" min="0" oninput="calc18()"/>
+        <span class="unit-label">g</span>
+      </div>
+    </div>
+    <div class="results" id="res18">
+      <div class="empty-state">Enter weight above to calculate</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">✦ Vishwas Jewellers ✦</div>
+
+<!-- Admin Modal (Step 1: PIN) -->
+<div class="modal-overlay" id="pinModal">
+  <div class="modal">
+    <div class="modal-title">Admin Access</div>
+    <div class="modal-sub">Enter your 4-digit PIN to update rates</div>
+    <input class="modal-input" id="pinInput" type="password" inputmode="numeric" maxlength="4" placeholder="• • • •"/>
+    <div class="modal-error" id="pinError"></div>
+    <button class="modal-btn primary" onclick="checkPin()">UNLOCK</button>
+    <button class="modal-btn secondary" onclick="closeModals()">CANCEL</button>
+  </div>
+</div>
+
+<!-- Admin Modal (Step 2: Rate Update) -->
+<div class="modal-overlay" id="rateModal">
+  <div class="modal">
+    <div class="modal-title">Update Gold Rate</div>
+    <div class="modal-sub">Set today's 24kt (999+GST) rate per 10g</div>
+    <label class="modal-label">24kt Rate (₹ per 10g)</label>
+    <input class="modal-input" id="rateInput" type="number" inputmode="numeric" placeholder="e.g. 156500"/>
+    <div class="numpad">
+      <button class="np-btn" onclick="np('1')">1</button>
+      <button class="np-btn" onclick="np('2')">2</button>
+      <button class="np-btn" onclick="np('3')">3</button>
+      <button class="np-btn" onclick="np('4')">4</button>
+      <button class="np-btn" onclick="np('5')">5</button>
+      <button class="np-btn" onclick="np('6')">6</button>
+      <button class="np-btn" onclick="np('7')">7</button>
+      <button class="np-btn" onclick="np('8')">8</button>
+      <button class="np-btn" onclick="np('9')">9</button>
+      <button class="np-btn gold" onclick="np('0')">0</button>
+      <button class="np-btn gold" onclick="np('00')">00</button>
+      <button class="np-btn danger" onclick="npDel()">⌫</button>
+    </div>
+    <button class="modal-btn primary" onclick="saveRate()">SAVE RATE</button>
+    <button class="modal-btn secondary" onclick="closeModals()">CANCEL</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── Helpers (replicating Excel formulas) ──────────────────────────────────────
+function roundup100(x){return Math.ceil(x/100)*100}
+function mround(x,m){return Math.round(x/m)*m}
+function fmt(n){return '₹'+Math.round(n).toLocaleString('en-IN')}
+
+function getRates(rate24){
+  const rates = roundup100(rate24*97/100)     // RATES cell
+  const r22   = roundup100(rates*92/100)       // 22kt rate
+  const r18   = roundup100(rates*76/100)       // 18kt rate
+  return {rates,r22,r18}
+}
+
+function calcGold(rate24, karat, weight){
+  const {rates,r22,r18} = getRates(rate24)
+  const kMul = karat===22 ? 92 : 76
+  const makingRate = karat===22 ? r22 : r18
+  const goldVal   = mround(((rates*kMul)/1000)*weight, 5)
+  const making    = mround((makingRate*0.005)*weight, 5)
+  const gst       = mround((goldVal+making)*3/100, 5)
+  const total     = mround(goldVal+making+gst, 50)
+  const roundOff  = total-(goldVal+making+gst)
+  return {goldVal, making, gst, roundOff, total}
+}
+
+// ── Storage ───────────────────────────────────────────────────────────────────
+const STORAGE_KEY = 'vj_rate24'
+const DEFAULT_RATE = 156500
+const PIN = '2005'   // Change this PIN as needed
+
+function getRate24(){
+  try{return parseInt(localStorage.getItem(STORAGE_KEY))||DEFAULT_RATE}catch(e){return DEFAULT_RATE}
+}
+function setRate24(v){try{localStorage.setItem(STORAGE_KEY,v)}catch(e){}}
+
+// ── UI updates ────────────────────────────────────────────────────────────────
+function updateRatebar(){
+  const r = getRate24()
+  const {rates,r22,r18} = getRates(r)
+  document.getElementById('rate24disp').textContent = '₹'+rates.toLocaleString('en-IN')
+  document.getElementById('rate22disp').textContent = '₹'+r22.toLocaleString('en-IN')
+  document.getElementById('rate18disp').textContent = '₹'+r18.toLocaleString('en-IN')
+  document.getElementById('hdr22').textContent = '₹'+r22.toLocaleString('en-IN')+'/10g'
+  document.getElementById('hdr18').textContent = '₹'+r18.toLocaleString('en-IN')+'/10g'
+}
+
+function renderResult(containerId, rate24, karat, weight){
+  const el = document.getElementById(containerId)
+  if(!weight||weight<=0){el.innerHTML='<div class="empty-state">Enter weight above to calculate</div>';return}
+  const {goldVal,making,gst,roundOff,total} = calcGold(rate24, karat, weight)
+  el.innerHTML = `
+    <div class="result-row"><span class="result-label">Gold Value</span><span class="result-val gold">${fmt(goldVal)}</span></div>
+    <div class="result-row"><span class="result-label">Making Charges (5%)</span><span class="result-val">${fmt(making)}</span></div>
+    <div class="result-row"><span class="result-label">GST (3%)</span><span class="result-val">${fmt(gst)}</span></div>
+    <div class="result-row"><span class="result-label">Round Off</span><span class="result-val muted">${roundOff>=0?'+':''} ₹${Math.round(Math.abs(roundOff)).toLocaleString('en-IN')}</span></div>
+    <div class="total-row">
+      <span class="total-label">Total Amount</span>
+      <span class="total-amount">${fmt(total)}</span>
+    </div>`
+}
+
+function calc22(){
+  const w = parseFloat(document.getElementById('w22').value)||0
+  renderResult('res22', getRate24(), 22, w)
+}
+function calc18(){
+  const w = parseFloat(document.getElementById('w18').value)||0
+  renderResult('res18', getRate24(), 18, w)
+}
+
+// ── Admin ─────────────────────────────────────────────────────────────────────
+function openAdmin(){
+  document.getElementById('pinInput').value=''
+  document.getElementById('pinError').textContent=''
+  document.getElementById('pinModal').classList.add('active')
+  setTimeout(()=>document.getElementById('pinInput').focus(),100)
+}
+function checkPin(){
+  const entered = document.getElementById('pinInput').value
+  if(entered===PIN){
+    document.getElementById('pinModal').classList.remove('active')
+    document.getElementById('rateInput').value = getRate24()
+    document.getElementById('rateModal').classList.add('active')
+  } else {
+    document.getElementById('pinError').textContent='Incorrect PIN. Please try again.'
+    document.getElementById('pinInput').value=''
+  }
+}
+function closeModals(){
+  document.querySelectorAll('.modal-overlay').forEach(m=>m.classList.remove('active'))
+}
+function np(v){
+  const inp = document.getElementById('rateInput')
+  inp.value = (inp.value||'')+v
+}
+function npDel(){
+  const inp = document.getElementById('rateInput')
+  inp.value = inp.value.slice(0,-1)
+}
+function saveRate(){
+  const v = parseInt(document.getElementById('rateInput').value)
+  if(!v||v<10000||v>1000000){showToast('Enter a valid rate');return}
+  setRate24(v)
+  closeModals()
+  updateRatebar()
+  calc22();calc18()
+  showToast('Rate updated successfully!')
+}
+function showToast(msg){
+  const t=document.getElementById('toast')
+  t.textContent=msg;t.classList.add('show')
+  setTimeout(()=>t.classList.remove('show'),2500)
+}
+
+// Enter key for PIN
+document.getElementById('pinInput').addEventListener('keydown',e=>{if(e.key==='Enter')checkPin()})
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+updateRatebar()
+
+// Service Worker Registration
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').catch(err => console.warn('SW error:', err));
+}
+
+// PWA Install Prompt
+let deferredPrompt = null;
+const installBar = document.getElementById('pwa-install-bar');
+const installBtn = document.getElementById('pwa-install-btn');
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  installBar.style.display = 'flex';
+});
+
+if(installBtn) {
+  installBtn.addEventListener('click', async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') {
+      installBar.style.display = 'none';
+      showToast('App installed! ✦');
+    }
+    deferredPrompt = null;
+  });
+}
+
+window.addEventListener('appinstalled', () => {
+  installBar.style.display = 'none';
+  deferredPrompt = null;
+});
+</script>
+
+<!-- PWA Install Button (shown when installable) -->
+<div id="pwa-install-bar" style="display:none;position:fixed;bottom:0;left:0;right:0;background:linear-gradient(90deg,#2D1B4E,#3D2560);border-top:1px solid #C9922A;padding:12px 20px;display:none;align-items:center;justify-content:space-between;z-index:300">
+  <span style="color:#F5D07A;font-size:13px;font-weight:600">📲 Add Vishwas Gold to Home Screen</span>
+  <button id="pwa-install-btn" style="background:#E8B84B;color:#1A0A2E;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:700;cursor:pointer">Install</button>
+</div>
+</body>
+</html>
