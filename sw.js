@@ -1,20 +1,35 @@
-// ── Vishwas Jewellers Gold Calculator — Service Worker ──────────────────────
-const CACHE_NAME = 'vishwas-gold-v1';
-const ASSETS = [
-  './VISHWAS_CALCULATOR.html',
-  './manifest.webmanifest'
-];
+// ══════════════════════════════════════════════════════════════
+//  VISHWAS GOLD CALCULATOR — Service Worker
+//  Cache-first for app shell, network-first for live API calls
+// ══════════════════════════════════════════════════════════════
 
-// ── Install: pre-cache all assets ─────────────────────────────────────────────
+const CACHE_NAME    = 'vishwas-gold-v21'
+const OFFLINE_PAGE  = './VISHWAS_CALCULATOR_v21.html'
+
+// Files to pre-cache on install (app shell)
+const PRECACHE_URLS = [
+  './',
+  './VISHWAS_CALCULATOR_v21.html',
+  './manifest.webmanifest',
+  'https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap',
+]
+
+// API hosts — always network-first, never cache
+const API_HOSTS = [
+  'api.gold-api.com',
+  'open.er-api.com',
+]
+
+// ── Install: pre-cache app shell ──────────────────────────────
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      return cache.addAll(ASSETS);
-    }).then(() => self.skipWaiting())
-  );
-});
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll(PRECACHE_URLS))
+      .then(() => self.skipWaiting())
+  )
+})
 
-// ── Activate: clear old caches ────────────────────────────────────────────────
+// ── Activate: delete old caches ───────────────────────────────
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys =>
@@ -24,43 +39,57 @@ self.addEventListener('activate', event => {
           .map(key => caches.delete(key))
       )
     ).then(() => self.clients.claim())
-  );
-});
+  )
+})
 
-// ── Fetch: cache-first strategy with network fallback ─────────────────────────
+// ── Fetch: routing strategy ───────────────────────────────────
 self.addEventListener('fetch', event => {
-  // Only handle GET requests
-  if (event.request.method !== 'GET') return;
+  const url = new URL(event.request.url)
 
+  // 1. Live API calls → Network only (no caching, no fallback)
+  if (API_HOSTS.includes(url.hostname)) {
+    event.respondWith(fetch(event.request))
+    return
+  }
+
+  // 2. Google Fonts → Cache first, fallback to network
+  if (url.hostname === 'fonts.googleapis.com' || url.hostname === 'fonts.gstatic.com') {
+    event.respondWith(
+      caches.match(event.request).then(cached =>
+        cached || fetch(event.request).then(response => {
+          const clone = response.clone()
+          caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone))
+          return response
+        })
+      )
+    )
+    return
+  }
+
+  // 3. App shell → Cache first, then network, fallback to offline page
   event.respondWith(
     caches.match(event.request).then(cached => {
-      if (cached) {
-        // Serve from cache, but refresh cache in background (stale-while-revalidate)
-        const networkFetch = fetch(event.request).then(response => {
-          if (response && response.status === 200 && response.type === 'basic') {
-            const clone = response.clone();
-            caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+      if (cached) return cached
+
+      return fetch(event.request)
+        .then(response => {
+          // Cache valid GET responses
+          if (
+            event.request.method === 'GET' &&
+            response.status === 200 &&
+            response.type !== 'opaque'
+          ) {
+            const clone = response.clone()
+            caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone))
           }
-          return response;
-        }).catch(() => {/* offline — no-op */});
-
-        return cached;
-      }
-
-      // Not in cache — try network, then cache it
-      return fetch(event.request).then(response => {
-        if (!response || response.status !== 200 || response.type !== 'basic') {
-          return response;
-        }
-        const clone = response.clone();
-        caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
-        return response;
-      }).catch(() => {
-        // Offline fallback: return the main HTML page for navigation requests
-        if (event.request.mode === 'navigate') {
-          return caches.match('./VISHWAS_CALCULATOR.html');
-        }
-      });
+          return response
+        })
+        .catch(() => {
+          // Offline fallback — serve the calculator HTML
+          if (event.request.destination === 'document') {
+            return caches.match(OFFLINE_PAGE)
+          }
+        })
     })
-  );
-});
+  )
+})

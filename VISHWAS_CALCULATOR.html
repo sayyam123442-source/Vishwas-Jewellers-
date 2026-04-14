@@ -3,437 +3,658 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
-<meta name="theme-color" content="#1A0A2E"/>
+<meta name="theme-color" content="#0D0618"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="Vishwas Gold"/>
-<link rel="manifest" href="manifest.webmanifest"/>
-<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' fill='%231A0A2E'/><text x='96' y='130' font-size='100' text-anchor='middle' fill='%23E8B84B'>✦</text></svg>"/>
-<title>Vishwas Jewellers — Gold Calculator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<title>Vishwas Jewellers — Live Gold Calculator</title>
 <style>
-  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-  :root{
-    --gold:#E8B84B;--gold-light:#F5D07A;--gold-pale:#FDF0C0;--gold-dark:#C9922A;
-    --bg:#1A0A2E;--surface:#2D1B4E;--surface2:#3D2560;--surface3:#4D2F72;
-    --text:#F5D07A;--text-muted:#C9922A;--text-dim:#8B6015;
-    --green:#4CAF50;--red:#E53935;
-    --radius:14px;--radius-sm:8px;
-  }
-  html,body{height:100%;overflow-x:hidden;background:var(--bg)}
-  body{font-family:Arial,sans-serif;color:var(--text);min-height:100vh;padding-bottom:40px}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --gold:#F0C040;--gold-light:#FFE080;--gold-dark:#C9821A;--gold-dim:#A07820;
+  --bg:#1E0028;--s1:#280035;--s2:#360045;--s3:#460058;--s4:#58006E;
+  --text:#FFFFFF;--muted:#F0C040;--dim:#7A5FA0;
+  --green:#3DD68C;--green-bg:rgba(61,214,140,0.08);--green-bd:rgba(61,214,140,0.25);
+  --red:#FF5252;--amber:#FFB300;
+  --r:14px;--rs:10px;--rx:6px;
+  --white:#FFFFFF;--purple-light:#D4AAFF;--purple-mid:#6A30AA;
+}
+html,body{height:100%;overflow-x:hidden;background:var(--bg)}
+body{
+  font-family:Arial,sans-serif;font-weight:600;color:var(--text);min-height:100vh;padding-bottom:80px;
+  background:radial-gradient(ellipse 140% 70% at 50% 0%,#380050 0%,#280035 50%,#1E0028 100%);
+}
 
-  /* Header */
-  .header{
-    background:linear-gradient(135deg,#2D1B4E 0%,#3D2560 50%,#2D1B4E 100%);
-    border-bottom:1px solid var(--gold-dark);
-    padding:20px 20px 16px;
-    text-align:center;
-    position:relative;
-  }
-  .header-ornament{color:var(--gold);font-size:11px;letter-spacing:4px;text-transform:uppercase;margin-bottom:6px;font-family:Arial,sans-serif;font-weight:700}
-  .header-title{font-family:Arial,sans-serif;font-size:28px;font-weight:700;color:var(--gold-light);line-height:1.1;letter-spacing:1px}
-  .header-sub{font-size:12px;color:var(--text-muted);margin-top:4px;letter-spacing:2px;text-transform:uppercase}
-  .admin-btn{position:absolute;top:18px;right:16px;background:none;border:1px solid var(--gold-dark);border-radius:var(--radius-sm);padding:6px 10px;color:var(--text-muted);font-size:11px;cursor:pointer;font-family:Arial,sans-serif;transition:all 0.2s}
-  .admin-btn:active{background:var(--surface2);color:var(--gold)}
+/* HEADER */
+.hdr{
+  background:linear-gradient(160deg,#280035 0%,#460058 50%,#280035 100%);
+  border-bottom:2px solid var(--gold);
+  padding:18px 20px 14px;text-align:center;position:relative;
+  box-shadow:0 4px 20px rgba(0,0,0,0.8);
+}
+.hdr::after{content:'';position:absolute;bottom:-1px;left:5%;right:5%;height:2px;
+  background:linear-gradient(90deg,transparent,rgba(255,224,128,0.9),rgba(240,192,64,1),rgba(255,224,128,0.9),transparent)}
+.hdr-orn{color:var(--gold);font-size:9px;letter-spacing:5px;text-transform:uppercase;
+  margin-bottom:4px;font-weight:600;opacity:0.65}
+.hdr-title{font-family:Arial,sans-serif;font-size:25px;font-weight:700;color:var(--gold-light);
+  letter-spacing:2px;}
+.hdr-sub{font-size:10px;color:var(--muted);margin-top:3px;letter-spacing:3px;text-transform:uppercase}
+.adm-btn{position:absolute;top:16px;right:14px;background:rgba(140,40,160,0.15);
+  border:1px solid rgba(180,120,255,0.3);border-radius:var(--rx);
+  padding:6px 11px;color:var(--purple-light);font-size:11px;cursor:pointer;
+  font-family:Arial,sans-serif;font-weight:700;letter-spacing:1px;transition:all .2s}
+.adm-btn:active{background:rgba(140,40,160,0.4);color:#FFFFFF}
 
-  /* Rate bar */
-  .rate-bar{background:var(--surface2);border-bottom:1px solid var(--gold-dark);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;gap:8px}
-  .rate-item{text-align:center;flex:1}
-  .rate-label{font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:1.5px}
-  .rate-value{font-size:15px;font-weight:700;color:var(--gold-light);font-family:Arial,sans-serif;letter-spacing:0.5px}
-  .rate-divider{width:1px;height:30px;background:var(--surface3)}
+/* STATUS BAR */
+.sbar{
+  padding:8px 14px;display:flex;align-items:center;justify-content:space-between;
+  font-size:11px;font-weight:600;letter-spacing:.4px;
+  border-bottom:1px solid transparent;transition:all .4s;
+}
+.sbar.live{background:var(--green-bg);border-bottom-color:var(--green-bd)}
+.sbar.fetching{background:rgba(255,179,0,.07);border-bottom-color:rgba(255,179,0,.2)}
+.sbar.error{background:rgba(255,82,82,.07);border-bottom-color:rgba(255,82,82,.2)}
+.sbar.manual{background:rgba(232,184,75,.05);border-bottom-color:rgba(232,184,75,.1)}
+.sbar-l{display:flex;align-items:center;gap:7px}
+.dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;transition:background .4s}
+.sbar.live .dot{background:var(--green);animation:blink 1.4s infinite}
+.sbar.fetching .dot{background:var(--amber);animation:blink .7s infinite}
+.sbar.error .dot{background:var(--red)}
+.sbar.manual .dot{background:var(--dim)}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.slabel{font-family:Arial,sans-serif;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;transition:color .4s}
+.sbar.live .slabel{color:var(--green)}
+.sbar.fetching .slabel{color:var(--amber)}
+.sbar.error .slabel{color:var(--red)}
+.sbar.manual .slabel{color:var(--dim)}
+.stime{color:var(--purple-light);font-size:10px;font-weight:500;text-align:right}
+.retry{background:rgba(255,82,82,.1);border:1px solid rgba(255,82,82,.3);
+  border-radius:4px;padding:4px 10px;color:var(--red);font-size:11px;
+  font-weight:700;cursor:pointer;font-family:Arial,sans-serif;letter-spacing:.5px}
+.retry:active{background:rgba(255,82,82,.2)}
 
-  /* Main content */
-  .main{padding:20px 16px 0}
+/* RATE TICKER */
+.ticker{
+  background:linear-gradient(90deg,#280035,#360045,#280035);
+  border-bottom:1px solid rgba(240,192,64,.5);
+  padding:11px 14px;display:flex;align-items:stretch;
+}
+.ti{text-align:center;flex:1;padding:0 3px;position:relative}
+.ti+.ti::before{content:'';position:absolute;left:0;top:15%;height:70%;width:1px;
+  background:linear-gradient(180deg,transparent,rgba(240,192,64,.5),transparent)}
+.ti-lbl{font-size:9px;color:var(--gold);text-transform:uppercase;letter-spacing:2px;
+  margin-bottom:3px;font-weight:600}
+.ti-val{font-family:Arial,sans-serif;font-size:14px;font-weight:700;color:#FFFFFF;
+  letter-spacing:.5px;min-height:20px;transition:all .3s}
+.ti-sub{font-size:8px;color:var(--gold-dim);margin-top:2px}
+@keyframes numFlash{0%{color:#FFFFFF}45%{color:#FFD76E;}100%{color:#FFFFFF}}
+.flash{animation:numFlash .5s ease}
 
-  /* Section */
-  .calc-section{
-    background:linear-gradient(180deg,var(--surface) 0%,#1A0A2E 100%);
-    border:1px solid var(--gold-dark);
-    border-radius:var(--radius);
-    margin-bottom:20px;
-    overflow:hidden;
-  }
-  .section-header{
-    background:linear-gradient(90deg,var(--surface2),var(--surface3));
-    padding:14px 18px;
-    border-bottom:1px solid var(--gold-dark);
-    display:flex;align-items:center;gap:10px
-  }
-  .karat-badge{
-    background:var(--gold);color:#1A0A2E;
-    font-size:13px;font-weight:700;
-    padding:4px 10px;border-radius:20px;
-    font-family:Arial,sans-serif;letter-spacing:1px
-  }
-  .section-title{font-size:15px;font-weight:600;color:var(--text);flex:1}
-  .section-rate{font-size:12px;color:var(--text-muted)}
+/* DATA STRIP */
+.dstrip{
+  display:flex;gap:6px;padding:8px 14px;
+  background:rgba(38,0,45,.9);border-bottom:1px solid rgba(240,192,64,.3);
+}
+.dc{flex:1;background:rgba(44,0,56,.9);border:1px solid rgba(240,192,64,.35);
+  border-radius:var(--rx);padding:6px 8px;text-align:center}
+.dc-lbl{font-size:8px;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;font-weight:600;margin-bottom:2px}
+.dc-val{font-family:Arial,sans-serif;font-size:12px;font-weight:700;color:#FFFFFF}
+.dc-val.hi{color:#FFFFFF}
 
-  /* Input area */
-  .input-area{padding:18px 18px 12px}
-  .input-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;display:block}
-  .weight-row{display:flex;align-items:center;gap:10px}
-  .weight-input{
-    flex:1;background:var(--surface2);border:1.5px solid var(--gold-dark);
-    border-radius:var(--radius-sm);padding:14px 16px;
-    font-size:24px;font-weight:700;color:var(--gold-light);
-    font-family:Arial,sans-serif;letter-spacing:1px;
-    outline:none;width:100%;text-align:center;
-    transition:border-color 0.2s;
-  }
-  .weight-input:focus{border-color:var(--gold)}
-  .weight-input::placeholder{color:var(--text-dim);font-size:18px}
-  .unit-label{color:var(--text-muted);font-size:14px;font-weight:600;min-width:24px}
+/* MAIN */
+.main{padding:14px 12px 0}
 
-  /* Results */
-  .results{padding:0 18px 18px}
-  .result-row{
-    display:flex;justify-content:space-between;align-items:center;
-    padding:9px 0;border-bottom:1px solid rgba(139,96,21,0.2)
-  }
-  .result-row:last-child{border-bottom:none}
-  .result-label{font-size:13px;color:var(--text-muted)}
-  .result-val{font-size:14px;font-weight:600;color:var(--text);font-family:Arial,sans-serif;font-size:16px}
-  .result-val.gold{color:var(--gold-light)}
-  .result-val.muted{color:var(--text-dim);font-size:14px}
-  .total-row{
-    background:linear-gradient(90deg,rgba(232,184,75,0.15),rgba(232,184,75,0.05));
-    border:1px solid rgba(232,184,75,0.4);
-    border-radius:var(--radius-sm);
-    padding:14px 16px;margin-top:10px;
-    display:flex;justify-content:space-between;align-items:center
-  }
-  .total-label{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--gold)}
-  .total-amount{font-size:26px;font-weight:700;color:var(--gold-light);font-family:Arial,sans-serif;letter-spacing:1px}
+/* SECTION */
+.sec{
+  background:linear-gradient(160deg,rgba(55,0,70,.98),rgba(38,0,45,.99));
+  border:1px solid rgba(240,192,64,.55);border-radius:var(--r);
+  margin-bottom:14px;overflow:hidden;
+  box-shadow:0 4px 16px rgba(0,0,0,.6);
+}
+.sec-hdr{
+  background:linear-gradient(90deg,rgba(66,0,88,.95),rgba(80,0,100,.7));
+  padding:12px 15px;border-bottom:1px solid rgba(240,192,64,.4);
+  display:flex;align-items:center;gap:9px;
+}
+.kbadge{
+  background:linear-gradient(135deg,#FFE080,#C9821A);
+  color:#1E0028;font-size:12px;font-weight:700;
+  padding:3px 10px;border-radius:20px;font-family:Arial,sans-serif;letter-spacing:1px;
+}
+.sec-title{font-size:13px;font-weight:600;color:#FFFFFF;flex:1;letter-spacing:.3px}
+.sec-rate{font-size:11px;color:var(--gold-light);font-weight:700}
 
-  /* Empty state */
-  .empty-state{padding:20px;text-align:center;color:var(--text-dim);font-size:13px;font-style:italic}
+.inp-area{padding:14px 15px 10px}
+.inp-lbl{font-size:9px;color:var(--gold);text-transform:uppercase;
+  letter-spacing:2.5px;margin-bottom:7px;display:block;font-weight:600}
+.wrow{display:flex;align-items:center;gap:8px}
+.winp{
+  flex:1;background:rgba(44,0,56,.8);
+  border:1.5px solid rgba(240,192,64,.5);
+  border-radius:var(--rs);padding:12px 14px;
+  font-size:24px;font-weight:700;color:#FFFFFF;
+  font-family:Arial,sans-serif;letter-spacing:1px;
+  outline:none;width:100%;text-align:center;transition:border-color .2s;
+}
+.winp:focus{border-color:var(--gold-light)}
+.winp::placeholder{color:rgba(212,170,255,.4);font-size:16px;font-family:Arial,sans-serif}
+.ulbl{color:var(--gold-light);font-size:13px;font-weight:700;min-width:20px;font-family:Arial,sans-serif}
 
-  /* Admin modal */
-  .modal-overlay{
-    display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);
-    z-index:100;align-items:center;justify-content:center;padding:20px
-  }
-  .modal-overlay.active{display:flex}
-  .modal{
-    background:var(--surface);border:1px solid var(--gold);
-    border-radius:var(--radius);padding:28px 24px;
-    width:100%;max-width:340px
-  }
-  .modal-title{font-family:Arial,sans-serif;font-size:22px;font-weight:700;color:var(--gold-light);margin-bottom:4px;text-align:center}
-  .modal-sub{font-size:12px;color:var(--text-muted);text-align:center;margin-bottom:22px}
-  .modal-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;display:block}
-  .modal-input{
-    width:100%;background:var(--surface2);border:1px solid var(--gold-dark);
-    border-radius:var(--radius-sm);padding:12px 14px;
-    font-size:18px;color:var(--text);font-family:Arial,sans-serif;
-    outline:none;margin-bottom:14px;text-align:center
-  }
-  .modal-input:focus{border-color:var(--gold)}
-  .modal-btn{
-    width:100%;padding:13px;border:none;border-radius:var(--radius-sm);
-    font-size:14px;font-weight:700;letter-spacing:1px;cursor:pointer;
-    font-family:Arial,sans-serif;margin-bottom:8px;
-  }
-  .modal-btn.primary{background:var(--gold);color:#1A0A2E}
-  .modal-btn.secondary{background:var(--surface2);color:var(--text-muted);border:1px solid var(--gold-dark)}
-  .modal-error{color:var(--red);font-size:12px;text-align:center;margin:-6px 0 10px;min-height:16px}
+.res{padding:0 15px 15px}
+.rrow{display:flex;justify-content:space-between;align-items:center;
+  padding:7px 0;border-bottom:1px solid rgba(240,192,64,.15)}
+.rrow:last-child{border-bottom:none}
+.rlbl{font-size:12px;color:var(--gold);font-weight:600}
+.rval{font-size:14px;font-weight:700;color:#FFFFFF;font-family:Arial,sans-serif}
+.rval.gold{color:#FFFFFF}
+.rval.muted{color:rgba(255,255,255,.55);font-size:12px}
+.total-row{
+  background:linear-gradient(90deg,rgba(240,192,64,.18),rgba(200,130,26,.08));
+  border:1.5px solid rgba(240,192,64,.7);border-radius:var(--rs);
+  padding:12px 14px;margin-top:9px;display:flex;justify-content:space-between;align-items:center;
+}
+.tlbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;
+  color:var(--gold-light);font-family:Arial,sans-serif}
+.tamt{font-size:26px;font-weight:700;color:#FFFFFF;
+  font-family:Arial,sans-serif;letter-spacing:1px;}
+.empty{padding:16px;text-align:center;color:var(--dim);font-size:12px;font-style:italic}
 
-  /* Numpad */
-  .numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0}
-  .np-btn{
-    background:var(--surface2);border:1px solid var(--surface3);
-    border-radius:var(--radius-sm);padding:14px 8px;
-    font-size:18px;font-weight:600;color:var(--text);
-    cursor:pointer;text-align:center;font-family:Arial,sans-serif;
-    transition:background 0.15s;
-  }
-  .np-btn:active{background:var(--surface3)}
-  .np-btn.gold{background:rgba(201,146,42,0.15);color:var(--gold)}
-  .np-btn.danger{background:rgba(229,57,53,0.1);color:var(--red)}
+/* MODALS */
+.moverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);
+  z-index:100;align-items:center;justify-content:center;padding:18px;backdrop-filter:blur(5px)}
+.moverlay.active{display:flex}
+.modal{
+  background:linear-gradient(160deg,#360045,#1E0028);
+  border:1px solid rgba(240,192,64,.5);border-radius:var(--r);
+  padding:24px 20px;width:100%;max-width:355px;max-height:90vh;overflow-y:auto;
+  box-shadow:0 20px 50px rgba(0,0,0,.9);
+}
+.mtitle{font-family:Arial,sans-serif;font-size:19px;font-weight:700;
+  color:#FFFFFF;margin-bottom:3px;text-align:center}
+.msub{font-size:12px;color:var(--purple-light);text-align:center;margin-bottom:18px;font-weight:500}
+.mlbl{font-size:9px;color:var(--purple-light);text-transform:uppercase;
+  letter-spacing:2px;margin-bottom:6px;display:block;font-weight:600}
+.minp{
+  width:100%;background:rgba(44,0,56,.8);
+  border:1px solid rgba(240,192,64,.4);border-radius:var(--rs);
+  padding:11px 13px;font-size:17px;color:#FFFFFF;
+  font-family:Arial,sans-serif;font-weight:700;
+  outline:none;margin-bottom:12px;text-align:center;
+}
+.minp:focus{border-color:var(--gold-light)}
+.mbtn{
+  width:100%;padding:12px;border:none;border-radius:var(--rs);
+  font-size:13px;font-weight:700;letter-spacing:1.5px;cursor:pointer;
+  font-family:Arial,sans-serif;margin-bottom:7px;text-transform:uppercase;
+}
+.mbtn.prim{background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#1E0028;}
+.mbtn.sec{background:rgba(44,0,56,.9);color:var(--purple-light);border:1px solid rgba(240,192,64,.25)}
+.merr{color:var(--red);font-size:12px;text-align:center;margin:-4px 0 9px;min-height:16px;font-weight:600}
+.pdots{display:flex;justify-content:center;gap:12px;margin:10px 0 14px}
+.pdot{width:13px;height:13px;border-radius:50%;border:2px solid rgba(180,120,255,.35);
+  transition:all .2s;background:transparent}
+.pdot.on{background:var(--gold-light);border-color:var(--gold-light);}
 
-  /* Footer */
-  .footer{text-align:center;padding:24px 20px 10px;color:var(--text-dim);font-size:11px;letter-spacing:1px}
+/* ADMIN INFO BOX */
+.abox{background:var(--green-bg);border:1px solid var(--green-bd);
+  border-radius:var(--rs);padding:12px;margin-bottom:14px}
+.abox-t{font-size:9px;color:var(--green);text-transform:uppercase;
+  letter-spacing:2px;font-weight:700;margin-bottom:6px}
+.abox-f{font-size:12px;color:#bbb;line-height:1.8}
+.abox-f b{color:var(--gold-light)}
+.abox-f s{color:var(--muted)}
+.asep{border:none;border-top:1px solid rgba(140,40,160,.3);margin:14px 0}
+.ahint{font-size:11px;color:var(--purple-light);text-align:center;margin:-6px 0 10px;opacity:.7}
 
-  /* Toast */
-  .toast{
-    position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(80px);
-    background:var(--gold);color:#1A0A2E;padding:10px 22px;
-    border-radius:30px;font-size:13px;font-weight:700;
-    transition:transform 0.3s ease;z-index:200;white-space:nowrap
-  }
-  .toast.show{transform:translateX(-50%) translateY(0)}
+/* NUMPAD */
+.npd{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:10px 0}
+.nb{background:rgba(44,0,56,.9);border:1px solid rgba(240,192,64,.3);
+  border-radius:var(--rs);padding:12px 6px;
+  font-size:18px;font-weight:700;color:#FFFFFF;
+  cursor:pointer;text-align:center;font-family:Arial,sans-serif;transition:all .12s}
+.nb:active{background:rgba(80,0,100,.95);transform:scale(.95)}
+.nb.g{background:rgba(240,192,64,.15);color:var(--gold-light);border-color:rgba(240,192,64,.5)}
+.nb.r{background:rgba(255,82,82,.07);color:var(--red);border-color:rgba(255,82,82,.18)}
+
+.footer{text-align:center;padding:16px 20px 10px;color:var(--gold-light);
+  font-size:16px;letter-spacing:0.3px;font-family:'Dancing Script',cursive;font-weight:700;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+/* TOAST */
+.toast{
+  position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:linear-gradient(135deg,var(--gold),var(--gold-dark));
+  color:#1E0028;padding:9px 22px;border-radius:28px;
+  font-size:13px;font-weight:700;letter-spacing:.5px;
+  transition:transform .3s ease;z-index:200;white-space:nowrap;
+  font-family:Arial,sans-serif;
+}
+.toast.show{transform:translateX(-50%) translateY(0)}
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="header-ornament">✦ Established with Trust ✦</div>
-  <div class="header-title">Vishwas Jewellers</div>
-  <div class="header-sub">Gold Rate Calculator</div>
-  <button class="admin-btn" onclick="openAdmin()">⚙ Rates</button>
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hdr-title">Vishwas Jewellers</div>
+  <button class="adm-btn" onclick="openAdmin()">⚙ Admin</button>
 </div>
 
-<div class="rate-bar" id="ratebar">
-  <div class="rate-item">
-    <div class="rate-label">24kt Rate</div>
-    <div class="rate-value" id="rate24disp">—</div>
+<!-- STATUS BAR -->
+<div class="sbar fetching" id="sbar">
+  <div class="sbar-l">
+    <div class="dot"></div>
+    <span class="slabel" id="slabel">Fetching live rate…</span>
   </div>
-  <div class="rate-divider"></div>
-  <div class="rate-item">
-    <div class="rate-label">22kt Rate</div>
-    <div class="rate-value" id="rate22disp">—</div>
-  </div>
-  <div class="rate-divider"></div>
-  <div class="rate-item">
-    <div class="rate-label">18kt Rate</div>
-    <div class="rate-value" id="rate18disp">—</div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <span class="stime" id="stime"></span>
+    <button class="retry" id="retrybtn" onclick="fetchLiveRate(true)" style="display:none">↻ Retry</button>
   </div>
 </div>
 
+<!-- RATE TICKER -->
+<div class="ticker">
+  <div class="ti">
+    <div class="ti-lbl">24kt / 10g</div>
+    <div class="ti-val" id="r24">—</div>
+    <div class="ti-sub">Ex-GST</div>
+  </div>
+  <div class="ti">
+    <div class="ti-lbl">22kt / 10g</div>
+    <div class="ti-val" id="r22">—</div>
+    <div class="ti-sub">Ex-GST</div>
+  </div>
+  <div class="ti">
+    <div class="ti-lbl">18kt / 10g</div>
+    <div class="ti-val" id="r18">—</div>
+    <div class="ti-sub">Ex-GST</div>
+  </div>
+</div>
+
+<!-- DATA STRIP -->
+<div class="dstrip">
+  <div class="dc" style="flex:2">
+    <div class="dc-lbl">COMEX Spot</div>
+    <div class="dc-val hi" id="dcComex">—</div>
+  </div>
+  <div class="dc" style="flex:2">
+    <div class="dc-lbl">USD / INR</div>
+    <div class="dc-val hi" id="dcForex">—</div>
+  </div>
+</div>
+
+<!-- CALCULATORS -->
 <div class="main">
 
-  <!-- 22kt Calculator -->
-  <div class="calc-section">
-    <div class="section-header">
-      <span class="karat-badge">22kt</span>
-      <span class="section-title">Gold Calculator</span>
-      <span class="section-rate" id="hdr22"></span>
+  <div class="sec">
+    <div class="sec-hdr">
+      <span class="kbadge">22kt</span>
+      <span class="sec-title">Gold Calculator</span>
+      <span class="sec-rate" id="h22"></span>
     </div>
-    <div class="input-area">
-      <span class="input-label">Enter Gold Weight</span>
-      <div class="weight-row">
-        <input class="weight-input" id="w22" type="number" inputmode="decimal" placeholder="0.00" step="0.01" min="0" oninput="calc22()"/>
-        <span class="unit-label">g</span>
+    <div class="inp-area">
+      <span class="inp-lbl">Enter Weight</span>
+      <div class="wrow">
+        <input class="winp" id="w22" type="number" inputmode="decimal"
+          placeholder="0.000" step="0.001" min="0" oninput="calc22()"/>
+        <span class="ulbl">g</span>
       </div>
     </div>
-    <div class="results" id="res22">
-      <div class="empty-state">Enter weight above to calculate</div>
-    </div>
+    <div class="res" id="res22"><div class="empty">Enter weight above to calculate</div></div>
   </div>
 
-  <!-- 18kt Calculator -->
-  <div class="calc-section">
-    <div class="section-header">
-      <span class="karat-badge" style="background:linear-gradient(135deg,#C9922A,#8B6015);color:#1A0A2E">18kt</span>
-      <span class="section-title">Gold Calculator</span>
-      <span class="section-rate" id="hdr18"></span>
+  <div class="sec">
+    <div class="sec-hdr">
+      <span class="kbadge" style="background:linear-gradient(135deg,#C9922A,#7A5010)">18kt</span>
+      <span class="sec-title">Gold Calculator</span>
+      <span class="sec-rate" id="h18"></span>
     </div>
-    <div class="input-area">
-      <span class="input-label">Enter Gold Weight</span>
-      <div class="weight-row">
-        <input class="weight-input" id="w18" type="number" inputmode="decimal" placeholder="0.00" step="0.01" min="0" oninput="calc18()"/>
-        <span class="unit-label">g</span>
+    <div class="inp-area">
+      <span class="inp-lbl">Enter Weight</span>
+      <div class="wrow">
+        <input class="winp" id="w18" type="number" inputmode="decimal"
+          placeholder="0.000" step="0.001" min="0" oninput="calc18()"/>
+        <span class="ulbl">g</span>
       </div>
     </div>
-    <div class="results" id="res18">
-      <div class="empty-state">Enter weight above to calculate</div>
-    </div>
+    <div class="res" id="res18"><div class="empty">Enter weight above to calculate</div></div>
   </div>
 
 </div>
 
-<div class="footer">✦ Vishwas Jewellers ✦</div>
+<div class="footer">✦ &nbsp; Defining Golden Tradition of Trust Since.... &nbsp; ✦</div>
 
-<!-- Admin Modal (Step 1: PIN) -->
-<div class="modal-overlay" id="pinModal">
+<!-- PIN MODAL -->
+<div class="moverlay" id="pinModal">
   <div class="modal">
-    <div class="modal-title">Admin Access</div>
-    <div class="modal-sub">Enter your 4-digit PIN to update rates</div>
-    <input class="modal-input" id="pinInput" type="password" inputmode="numeric" maxlength="4" placeholder="• • • •"/>
-    <div class="modal-error" id="pinError"></div>
-    <button class="modal-btn primary" onclick="checkPin()">UNLOCK</button>
-    <button class="modal-btn secondary" onclick="closeModals()">CANCEL</button>
+    <div class="mtitle">Admin Access</div>
+    <div class="msub">Enter your 4-digit PIN</div>
+    <div class="pdots">
+      <div class="pdot" id="pd0"></div><div class="pdot" id="pd1"></div>
+      <div class="pdot" id="pd2"></div><div class="pdot" id="pd3"></div>
+    </div>
+    <input class="minp" id="pinInp" type="password" inputmode="numeric"
+      maxlength="4" placeholder="• • • •" oninput="updDots()"/>
+    <div class="merr" id="pinErr"></div>
+    <button class="mbtn prim" onclick="checkPin()">Unlock</button>
+    <button class="mbtn sec" onclick="closeModals()">Cancel</button>
   </div>
 </div>
 
-<!-- Admin Modal (Step 2: Rate Update) -->
-<div class="modal-overlay" id="rateModal">
+<!-- ADMIN MODAL -->
+<div class="moverlay" id="adminModal">
   <div class="modal">
-    <div class="modal-title">Update Gold Rate</div>
-    <div class="modal-sub">Set today's 24kt (999+GST) rate per 10g</div>
-    <label class="modal-label">24kt Rate (₹ per 10g)</label>
-    <input class="modal-input" id="rateInput" type="number" inputmode="numeric" placeholder="e.g. 156500"/>
-    <div class="numpad">
-      <button class="np-btn" onclick="np('1')">1</button>
-      <button class="np-btn" onclick="np('2')">2</button>
-      <button class="np-btn" onclick="np('3')">3</button>
-      <button class="np-btn" onclick="np('4')">4</button>
-      <button class="np-btn" onclick="np('5')">5</button>
-      <button class="np-btn" onclick="np('6')">6</button>
-      <button class="np-btn" onclick="np('7')">7</button>
-      <button class="np-btn" onclick="np('8')">8</button>
-      <button class="np-btn" onclick="np('9')">9</button>
-      <button class="np-btn gold" onclick="np('0')">0</button>
-      <button class="np-btn gold" onclick="np('00')">00</button>
-      <button class="np-btn danger" onclick="npDel()">⌫</button>
+    <div class="mtitle">Admin Panel</div>
+    <div class="msub">Rate settings</div>
+
+    <div class="abox">
+      <div class="abox-t">🔗 Formula</div>
+      <div class="abox-f">
+        <b>COMEX ($/oz)</b> ÷ 31.1035 × 10<br>
+        × <b>USD/INR</b> (set below daily)<br>
+        × (1 + <b>Import Duty %</b>)<br>
+        = <span style="color:var(--green)">Your 24kt Rate ₹/10g</span>
+      </div>
     </div>
-    <button class="modal-btn primary" onclick="saveRate()">SAVE RATE</button>
-    <button class="modal-btn secondary" onclick="closeModals()">CANCEL</button>
+
+    <label class="mlbl">USD / INR Rate &nbsp;<s style="font-size:9px">(check Google/Bank — update daily)</s></label>
+    <input class="minp" id="forexInp" type="number" inputmode="decimal" placeholder="e.g. 93.09" step="0.001" min="50" max="200"/>
+    <div class="ahint" style="margin-bottom:12px">Search "USD to INR" on Google for today's rate</div>
+
+    <label class="mlbl">Import Duty % &nbsp;<s style="font-size:9px">(default 6)</s></label>
+    <input class="minp" id="dutyInp" type="number" inputmode="decimal" placeholder="6" step="0.5" min="0" max="30"/>
+
+    <hr class="asep"/>
+    <label class="mlbl">Manual Rate Override ₹/10g &nbsp;<s style="font-size:9px">(optional — overrides everything)</s></label>
+    <input class="minp" id="manInp" type="number" inputmode="numeric" placeholder="Leave blank = use COMEX formula"/>
+    <div class="ahint">Set a rate here to freeze it completely. Clear to restore auto.</div>
+
+    <button class="mbtn prim" onclick="saveAdmin()">✅ Save Settings</button>
+    <button class="mbtn sec" onclick="closeModals()">Cancel</button>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// ── Helpers (replicating Excel formulas) ──────────────────────────────────────
-function roundup100(x){return Math.ceil(x/100)*100}
-function mround(x,m){return Math.round(x/m)*m}
-function fmt(n){return '₹'+Math.round(n).toLocaleString('en-IN')}
+// ══════════════════════════════════════════════════════════════
+//  VISHWAS GOLD CALCULATOR — LIVE ENGINE
+//  API 1: https://api.gold-api.com/price/XAU  (COMEX, free, no key)
+//  API 2: https://open.er-api.com/v6/latest/USD  (forex, free, no key)
+//  Formula: (COMEX$/oz ÷ 31.1035 × 10) × USD/INR × (1+duty%) × (1+GST%)
+//  Auto-refresh: every 60 seconds
+// ══════════════════════════════════════════════════════════════
 
-function getRates(rate24){
-  const rates = roundup100(rate24*97/100)     // RATES cell
-  const r22   = roundup100(rates*92/100)       // 22kt rate
-  const r18   = roundup100(rates*76/100)       // 18kt rate
-  return {rates,r22,r18}
+const PIN   = '2005'
+const TROY  = 31.1035
+const GOLD_API = 'https://api.gold-api.com/price/XAU'
+
+let goldUSD    = 0
+let usdINR     = parseFloat(localStorage.getItem('vj_forex')  ?? '0') || 0
+let dutyPct    = parseFloat(localStorage.getItem('vj_duty')   ?? '6')
+let gstPct     = parseFloat(localStorage.getItem('vj_gst')    ?? '3')
+let manRate    = parseInt(  localStorage.getItem('vj_manual') ?? '0') || 0
+let isLive          = false
+let refreshTmr      = null
+let tickTmr         = null
+let lastDisplayed24 = 0   // last 24kt rate actually shown to user
+
+// ── Helpers ───────────────────────────────────────────────
+const rup100 = x => Math.ceil(x/100)*100
+const mrd    = (x,m) => Math.round(x/m)*m
+const fmt    = n => '₹'+Math.round(n).toLocaleString('en-IN')
+const fmts   = n => '₹'+Math.round(n).toLocaleString('en-IN')
+const flash  = el => { el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash') }
+
+// ── Rate computation ──────────────────────────────────────
+function calc24kt(){
+  if(manRate > 0) return manRate
+  if(!goldUSD || !usdINR) return 0
+  const per10g = (goldUSD / TROY) * 10    // USD per 10g
+  const inr    = per10g * usdINR           // INR per 10g
+  const duty   = inr * (1 + dutyPct/100)  // + import duty only (NO GST here)
+  return Math.round(duty / 50) * 50        // rounded to nearest ₹50
 }
 
-function calcGold(rate24, karat, weight){
-  const {rates,r22,r18} = getRates(rate24)
-  const kMul = karat===22 ? 92 : 76
-  const makingRate = karat===22 ? r22 : r18
-  const goldVal   = mround(((rates*kMul)/1000)*weight, 5)
-  const making    = mround((makingRate*0.005)*weight, 5)
-  const gst       = mround((goldVal+making)*3/100, 5)
-  const total     = mround(goldVal+making+gst, 50)
-  const roundOff  = total-(goldVal+making+gst)
-  return {goldVal, making, gst, roundOff, total}
+function getRates(r24){
+  const r22 = rup100(r24 * 92/100)
+  const r18 = rup100(r24 * 76/100)
+  return {r22,r18}
 }
 
-// ── Storage ───────────────────────────────────────────────────────────────────
-const STORAGE_KEY = 'vj_rate24'
-const DEFAULT_RATE = 156500
-const PIN = '2005'   // Change this PIN as needed
+const HALLMARKING_CHARGE = 99
 
-function getRate24(){
-  try{return parseInt(localStorage.getItem(STORAGE_KEY))||DEFAULT_RATE}catch(e){return DEFAULT_RATE}
-}
-function setRate24(v){try{localStorage.setItem(STORAGE_KEY,v)}catch(e){}}
-
-// ── UI updates ────────────────────────────────────────────────────────────────
-function updateRatebar(){
-  const r = getRate24()
-  const {rates,r22,r18} = getRates(r)
-  document.getElementById('rate24disp').textContent = '₹'+rates.toLocaleString('en-IN')
-  document.getElementById('rate22disp').textContent = '₹'+r22.toLocaleString('en-IN')
-  document.getElementById('rate18disp').textContent = '₹'+r18.toLocaleString('en-IN')
-  document.getElementById('hdr22').textContent = '₹'+r22.toLocaleString('en-IN')+'/10g'
-  document.getElementById('hdr18').textContent = '₹'+r18.toLocaleString('en-IN')+'/10g'
+function calcJewel(r24, karat, weight){
+  const {r22,r18} = getRates(r24)
+  const mRate = karat===22 ? r22 : r18
+  const goldV = mrd( (mRate / 10) * weight, 5)
+  const mkg   = mrd( mRate * 0.005 * weight, 5)
+  const gst   = mrd( (goldV+mkg) * gstPct/100, 5)  // GST on gold value + making
+  const total = mrd( goldV+mkg+gst+HALLMARKING_CHARGE, 50)
+  const roff  = total - (goldV+mkg+gst+HALLMARKING_CHARGE)
+  return {goldV,mkg,gst,roff,total}
 }
 
-function renderResult(containerId, rate24, karat, weight){
-  const el = document.getElementById(containerId)
-  if(!weight||weight<=0){el.innerHTML='<div class="empty-state">Enter weight above to calculate</div>';return}
-  const {goldVal,making,gst,roundOff,total} = calcGold(rate24, karat, weight)
-  el.innerHTML = `
-    <div class="result-row"><span class="result-label">Gold Value</span><span class="result-val gold">${fmt(goldVal)}</span></div>
-    <div class="result-row"><span class="result-label">Making Charges (5%)</span><span class="result-val">${fmt(making)}</span></div>
-    <div class="result-row"><span class="result-label">GST (3%)</span><span class="result-val">${fmt(gst)}</span></div>
-    <div class="result-row"><span class="result-label">Round Off</span><span class="result-val muted">${roundOff>=0?'+':''} ₹${Math.round(Math.abs(roundOff)).toLocaleString('en-IN')}</span></div>
+// ── UI ────────────────────────────────────────────────────
+const FLUCTUATION_THRESHOLD = 200  // ₹200 minimum change to update display
+
+function updateTicker(force=false){
+  const r24 = calc24kt()
+  const e24=document.getElementById('r24')
+  const e22=document.getElementById('r22')
+  const e18=document.getElementById('r18')
+  if(!r24){
+    [e24,e22,e18].forEach(e=>e.textContent='—')
+    document.getElementById('h22').textContent=''
+    document.getElementById('h18').textContent=''
+    lastDisplayed24 = 0
+    return
+  }
+
+  // On auto-refresh: skip update if fluctuation < ₹200 vs last displayed rate
+  if(!force && lastDisplayed24 > 0 && Math.abs(r24 - lastDisplayed24) < FLUCTUATION_THRESHOLD){
+    // Rate hasn't moved enough — keep display as-is, show a quiet note
+    const diff = r24 - lastDisplayed24
+    const sign = diff >= 0 ? '+' : ''
+    document.getElementById('stime').textContent =
+      'Fetched · Δ'+sign+'₹'+Math.round(diff).toLocaleString('en-IN')+' (< ₹200 · display held)'
+    return
+  }
+
+  const {r22,r18} = getRates(r24)
+  const p24=fmts(r24), p22=fmts(r22), p18=fmts(r18)
+  if(e24.textContent!==p24){flash(e24);flash(e22);flash(e18)}
+  e24.textContent=p24; e22.textContent=p22; e18.textContent=p18
+  document.getElementById('h22').textContent=p22+'/10g'
+  document.getElementById('h18').textContent=p18+'/10g'
+
+  // data strip
+  document.getElementById('dcComex').textContent = goldUSD
+    ? '$'+goldUSD.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})
+    : (manRate?'Manual':'—')
+  document.getElementById('dcForex').textContent = usdINR
+    ? '₹'+usdINR.toFixed(3)
+    : '— Set in Admin'
+
+  lastDisplayed24 = r24
+  recalcAll()
+}
+
+function setBar(state,msg,showRetry=false){
+  const b=document.getElementById('sbar')
+  b.className='sbar '+state
+  document.getElementById('slabel').textContent=msg
+  document.getElementById('retrybtn').style.display=showRetry?'inline-block':'none'
+}
+
+function startTick(){
+  clearInterval(tickTmr)
+  tickTmr=setInterval(()=>{
+    if(!isLive) return
+    const now=new Date()
+    document.getElementById('stime').textContent=
+      'Updated '+now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit'})
+  },1000)
+}
+
+// ── Render result ─────────────────────────────────────────
+function renderRes(id, r24, karat, wt){
+  const el=document.getElementById(id)
+  if(!wt||wt<=0){el.innerHTML='<div class="empty">Enter weight above to calculate</div>';return}
+  if(!r24){el.innerHTML='<div class="empty">Waiting for live rate…</div>';return}
+  const {goldV,mkg,gst,roff,total}=calcJewel(r24,karat,wt)
+  el.innerHTML=`
+    <div class="rrow"><span class="rlbl">Gold Value</span><span class="rval gold">${fmt(goldV)}</span></div>
+    <div class="rrow"><span class="rlbl">Making Charges</span><span class="rval">${fmt(mkg)}</span></div>
+    <div class="rrow"><span class="rlbl">GST (${gstPct}%)</span><span class="rval">${fmt(gst)}</span></div>
+    <div class="rrow"><span class="rlbl">Hallmarking Charges</span><span class="rval">₹99</span></div>
+    <div class="rrow"><span class="rlbl">Round Off</span><span class="rval muted">${roff>=0?'+':''} ₹${Math.round(Math.abs(roff)).toLocaleString('en-IN')}</span></div>
     <div class="total-row">
-      <span class="total-label">Total Amount</span>
-      <span class="total-amount">${fmt(total)}</span>
+      <span class="tlbl">Total</span>
+      <span class="tamt">${fmt(total)}</span>
     </div>`
 }
 
-function calc22(){
-  const w = parseFloat(document.getElementById('w22').value)||0
-  renderResult('res22', getRate24(), 22, w)
+function recalcAll(){
+  const r24=calc24kt()
+  renderRes('res22',r24,22,parseFloat(document.getElementById('w22').value)||0)
+  renderRes('res18',r24,18,parseFloat(document.getElementById('w18').value)||0)
 }
-function calc18(){
-  const w = parseFloat(document.getElementById('w18').value)||0
-  renderResult('res18', getRate24(), 18, w)
-}
+function calc22(){renderRes('res22',calc24kt(),22,parseFloat(document.getElementById('w22').value)||0)}
+function calc18(){renderRes('res18',calc24kt(),18,parseFloat(document.getElementById('w18').value)||0)}
 
-// ── Admin ─────────────────────────────────────────────────────────────────────
-function openAdmin(){
-  document.getElementById('pinInput').value=''
-  document.getElementById('pinError').textContent=''
-  document.getElementById('pinModal').classList.add('active')
-  setTimeout(()=>document.getElementById('pinInput').focus(),100)
-}
-function checkPin(){
-  const entered = document.getElementById('pinInput').value
-  if(entered===PIN){
-    document.getElementById('pinModal').classList.remove('active')
-    document.getElementById('rateInput').value = getRate24()
-    document.getElementById('rateModal').classList.add('active')
-  } else {
-    document.getElementById('pinError').textContent='Incorrect PIN. Please try again.'
-    document.getElementById('pinInput').value=''
+// ── Fetch ─────────────────────────────────────────────────
+async function fetchLiveRate(force=false){
+  if(manRate > 0){
+    setBar('manual','Manual Rate Active — Auto Paused')
+    document.getElementById('stime').textContent = fmt(manRate)+' /10g'
+    isLive=false; updateTicker(true); return
+  }
+  if(!usdINR){
+    setBar('error','⚠ Set USD/INR rate in Admin first',true)
+    document.getElementById('stime').textContent = 'Tap ⚙ Admin → enter today\'s USD/INR'
+    isLive=false; return
+  }
+  setBar('fetching','Fetching COMEX gold spot…')
+  document.getElementById('stime').textContent=''
+  try{
+    const gRes = await fetch(GOLD_API, {signal:AbortSignal.timeout(9000)})
+    if(!gRes.ok) throw new Error('GoldAPI '+gRes.status)
+    const gData = await gRes.json()
+    const gPrice = gData.price || gData.bid || gData.ask || gData.rate
+    if(!gPrice || gPrice < 500) throw new Error('Bad gold data')
+    goldUSD = parseFloat(gPrice)
+    isLive  = true
+    localStorage.setItem('vj_fb_gold', goldUSD)
+    setBar('live','🔗 COMEX Live · USD/INR ₹'+usdINR.toFixed(3))
+    startTick()
+    updateTicker(force)
+  } catch(err){
+    console.warn('Gold fetch failed:',err.message)
+    const fg = parseFloat(localStorage.getItem('vj_fb_gold')||'0')
+    if(fg){
+      goldUSD=fg; isLive=false
+      setBar('error','⚠ Network error — cached COMEX rate',true)
+      document.getElementById('stime').textContent='Tap retry to refresh'
+      updateTicker(force)
+    } else {
+      isLive=false
+      setBar('error','⚠ Cannot fetch COMEX — check internet',true)
+      document.getElementById('stime').textContent=''
+    }
   }
 }
-function closeModals(){
-  document.querySelectorAll('.modal-overlay').forEach(m=>m.classList.remove('active'))
+
+function startRefresh(){
+  clearInterval(refreshTmr)
+  // Auto-refresh: force=false — display only updates if ≥ ₹200 change in 24kt
+  refreshTmr=setInterval(()=>{ fetchLiveRate(false) },60000)
 }
-function np(v){
-  const inp = document.getElementById('rateInput')
-  inp.value = (inp.value||'')+v
+
+// ── Admin / PIN ───────────────────────────────────────────
+function openAdmin(){
+  document.getElementById('pinInp').value=''
+  document.getElementById('pinErr').textContent=''
+  updDots()
+  document.getElementById('pinModal').classList.add('active')
+  setTimeout(()=>document.getElementById('pinInp').focus(),150)
 }
-function npDel(){
-  const inp = document.getElementById('rateInput')
-  inp.value = inp.value.slice(0,-1)
+function updDots(){
+  const l=document.getElementById('pinInp').value.length
+  for(let i=0;i<4;i++) document.getElementById('pd'+i).classList.toggle('on',i<l)
 }
-function saveRate(){
-  const v = parseInt(document.getElementById('rateInput').value)
-  if(!v||v<10000||v>1000000){showToast('Enter a valid rate');return}
-  setRate24(v)
+function checkPin(){
+  const v=document.getElementById('pinInp').value
+  if(v===PIN){
+    document.getElementById('pinModal').classList.remove('active')
+    document.getElementById('forexInp').value = usdINR || ''
+    document.getElementById('dutyInp').value  = dutyPct
+    document.getElementById('manInp').value   = manRate||''
+    document.getElementById('adminModal').classList.add('active')
+  } else {
+    document.getElementById('pinErr').textContent='Incorrect PIN. Try again.'
+    document.getElementById('pinInp').value=''; updDots()
+  }
+}
+function saveAdmin(){
+  const f = parseFloat(document.getElementById('forexInp').value)
+  const d = parseFloat(document.getElementById('dutyInp').value)
+  const m = parseInt(document.getElementById('manInp').value)||0
+  if(!m && (isNaN(f)||f<50||f>200)){showToast('Enter a valid USD/INR rate (e.g. 93.09)');return}
+  if(isNaN(d)||d<0||d>30){showToast('Import duty must be 0–30%');return}
+  if(m&&(m<50000||m>1500000)){showToast('Manual rate: ₹50,000–₹15,00,000');return}
+  if(!isNaN(f) && f>50) usdINR = f
+  dutyPct=d; manRate=m
+  localStorage.setItem('vj_forex',  usdINR)
+  localStorage.setItem('vj_duty',   d)
+  localStorage.setItem('vj_manual', m)
   closeModals()
-  updateRatebar()
-  calc22();calc18()
-  showToast('Rate updated successfully!')
+  fetchLiveRate(true)
+  showToast(m ? '⚠ Manual: '+fmt(m) : '✅ Saved — COMEX + ₹'+usdINR.toFixed(3)+' active')
 }
+function closeModals(){document.querySelectorAll('.moverlay').forEach(m=>m.classList.remove('active'))}
+document.getElementById('pinInp').addEventListener('keydown',e=>{if(e.key==='Enter')checkPin()})
+
 function showToast(msg){
   const t=document.getElementById('toast')
-  t.textContent=msg;t.classList.add('show')
-  setTimeout(()=>t.classList.remove('show'),2500)
+  t.textContent=msg; t.classList.add('show')
+  setTimeout(()=>t.classList.remove('show'),3200)
 }
 
-// Enter key for PIN
-document.getElementById('pinInput').addEventListener('keydown',e=>{if(e.key==='Enter')checkPin()})
-
-// ── Init ──────────────────────────────────────────────────────────────────────
-updateRatebar()
-
-// Service Worker Registration
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js').catch(err => console.warn('SW error:', err));
-}
-
-// PWA Install Prompt
-let deferredPrompt = null;
-const installBar = document.getElementById('pwa-install-bar');
-const installBtn = document.getElementById('pwa-install-btn');
-
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  installBar.style.display = 'flex';
-});
-
-if(installBtn) {
-  installBtn.addEventListener('click', async () => {
-    if (!deferredPrompt) return;
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    if (outcome === 'accepted') {
-      installBar.style.display = 'none';
-      showToast('App installed! ✦');
-    }
-    deferredPrompt = null;
-  });
-}
-
-window.addEventListener('appinstalled', () => {
-  installBar.style.display = 'none';
-  deferredPrompt = null;
-});
+// ── BOOT ─────────────────────────────────────────────────
+(async()=>{
+  dutyPct  = parseFloat(localStorage.getItem('vj_duty')   ?? '6')
+  gstPct   = parseFloat(localStorage.getItem('vj_gst')    ?? '3')
+  manRate  = parseInt(  localStorage.getItem('vj_manual') ?? '0') || 0
+  usdINR   = parseFloat(localStorage.getItem('vj_forex')  ?? '0') || 0
+  await fetchLiveRate(true)   // force=true: always show rate on first load
+  startRefresh()
+})()
 </script>
 
-<!-- PWA Install Button (shown when installable) -->
-<div id="pwa-install-bar" style="display:none;position:fixed;bottom:0;left:0;right:0;background:linear-gradient(90deg,#2D1B4E,#3D2560);border-top:1px solid #C9922A;padding:12px 20px;display:none;align-items:center;justify-content:space-between;z-index:300">
-  <span style="color:#F5D07A;font-size:13px;font-weight:600">📲 Add Vishwas Gold to Home Screen</span>
-  <button id="pwa-install-btn" style="background:#E8B84B;color:#1A0A2E;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:700;cursor:pointer">Install</button>
+<!-- PWA -->
+<div id="pbar" style="display:none;position:fixed;bottom:0;left:0;right:0;
+  background:linear-gradient(90deg,#1E0028,#360045);
+  border-top:2px solid rgba(240,192,64,.6);padding:12px 18px;
+  align-items:center;justify-content:space-between;z-index:300">
+  <span style="color:#FFFFFF;font-size:13px;font-weight:600;font-family:Arial,sans-serif">
+    📲 Install Vishwas Gold App
+  </span>
+  <button id="pbtn" style="background:linear-gradient(135deg,var(--gold),var(--gold-dark));
+    color:#0D0618;border:none;border-radius:8px;padding:8px 16px;
+    font-size:13px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif">
+    Install
+  </button>
 </div>
+<script>
+if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{})
+let dp=null
+const pb=document.getElementById('pbar'), pbtn=document.getElementById('pbtn')
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;pb.style.display='flex'})
+pbtn?.addEventListener('click',async()=>{if(!dp)return;dp.prompt();const{outcome}=await dp.userChoice;if(outcome==='accepted'){pb.style.display='none';showToast('App installed! ✦')}dp=null})
+window.addEventListener('appinstalled',()=>{pb.style.display='none';dp=null})
+</script>
 </body>
 </html>
