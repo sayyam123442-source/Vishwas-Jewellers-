@@ -3,13 +3,13 @@
 //  Cache-first for app shell, network-first for live API calls
 // ══════════════════════════════════════════════════════════════
 
-const CACHE_NAME    = 'vishwas-gold-v21'
-const OFFLINE_PAGE  = './VISHWAS_CALCULATOR_v21.html'
+const CACHE_NAME   = 'vishwas-gold-v1'
+const OFFLINE_PAGE = './VISHWAS_CALCULATOR.html'
 
 // Files to pre-cache on install (app shell)
 const PRECACHE_URLS = [
   './',
-  './VISHWAS_CALCULATOR_v21.html',
+  './VISHWAS_CALCULATOR.html',
   './manifest.webmanifest',
   'https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap',
 ]

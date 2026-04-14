@@ -507,7 +507,7 @@ function renderRes(id, r24, karat, wt){
   const {goldV,mkg,gst,roff,total}=calcJewel(r24,karat,wt)
   el.innerHTML=`
     <div class="rrow"><span class="rlbl">Gold Value</span><span class="rval gold">${fmt(goldV)}</span></div>
-    <div class="rrow"><span class="rlbl">Making Charges</span><span class="rval">${fmt(mkg)}</span></div>
+    <div class="rrow"><span class="rlbl">Making Charges (5%)</span><span class="rval">${fmt(mkg)}</span></div>
     <div class="rrow"><span class="rlbl">GST (${gstPct}%)</span><span class="rval">${fmt(gst)}</span></div>
     <div class="rrow"><span class="rlbl">Hallmarking Charges</span><span class="rval">₹99</span></div>
     <div class="rrow"><span class="rlbl">Round Off</span><span class="rval muted">${roff>=0?'+':''} ₹${Math.round(Math.abs(roff)).toLocaleString('en-IN')}</span></div>

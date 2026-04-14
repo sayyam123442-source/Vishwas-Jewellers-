@@ -2,7 +2,7 @@
   "name": "Vishwas Jewellers — Live Gold Calculator",
   "short_name": "Vishwas Gold",
   "description": "Live COMEX gold rate calculator for 22kt & 18kt jewellery with making charges, GST and hallmarking.",
-  "start_url": "./VISHWAS_CALCULATOR_v21.html",
+  "start_url": "./VISHWAS_CALCULATOR.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
@@ -60,19 +60,18 @@
       "purpose": "any maskable"
     }
   ],
-  "screenshots": [],
   "shortcuts": [
     {
       "name": "22kt Calculator",
       "short_name": "22kt",
       "description": "Open the 22kt gold calculator",
-      "url": "./VISHWAS_CALCULATOR_v21.html#22kt"
+      "url": "./VISHWAS_CALCULATOR.html#22kt"
     },
     {
       "name": "18kt Calculator",
       "short_name": "18kt",
       "description": "Open the 18kt gold calculator",
-      "url": "./VISHWAS_CALCULATOR_v21.html#18kt"
+      "url": "./VISHWAS_CALCULATOR.html#18kt"
     }
   ]
 }
