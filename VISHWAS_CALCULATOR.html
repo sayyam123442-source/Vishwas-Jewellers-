@@ -424,7 +424,7 @@ function getRates(r24){
   return {r22,r18}
 }
 
-const HALLMARKING_CHARGE = 99
+const HALLMARKING_CHARGE = 199
 
 function calcJewel(r24, karat, weight){
   const {r22,r18} = getRates(r24)
@@ -509,7 +509,7 @@ function renderRes(id, r24, karat, wt){
     <div class="rrow"><span class="rlbl">Gold Value</span><span class="rval gold">${fmt(goldV)}</span></div>
     <div class="rrow"><span class="rlbl">Making Charges (5%)</span><span class="rval">${fmt(mkg)}</span></div>
     <div class="rrow"><span class="rlbl">GST (${gstPct}%)</span><span class="rval">${fmt(gst)}</span></div>
-    <div class="rrow"><span class="rlbl">Hallmarking Charges</span><span class="rval">₹99</span></div>
+    <div class="rrow"><span class="rlbl">Hallmarking Charges</span><span class="rval">₹199</span></div>
     <div class="rrow"><span class="rlbl">Round Off</span><span class="rval muted">${roff>=0?'+':''} ₹${Math.round(Math.abs(roff)).toLocaleString('en-IN')}</span></div>
     <div class="total-row">
       <span class="tlbl">Total</span>
